@@ -1,8 +1,15 @@
 import requests
 import json
-import RequestConstants
 
+    
 class StableDiffusionApi:
+
+    key = "9ZbPcbOmKIbXsZxtEsuaJtJY31Vx75D5jOZlBW0Uwg8odSiC8AgoQW5r7MCk"
+    url = "https://stablediffusionapi.com/api/v3/text2img"
+
+    headers = {
+    'Content-Type': 'application/json'
+    }
 
     def GetGeneratedImageFromText(prompt, negativePrompt, height, width, upScale, highRes, panorama, webHook):
         """
@@ -17,7 +24,7 @@ class StableDiffusionApi:
         """
 
         payload = json.dumps({
-        "key": RequestConstants.key,
+        "key": StableDiffusionApi.key,
         "prompt": prompt,
         "negative_prompt": negativePrompt,
         "width": width,
@@ -36,7 +43,7 @@ class StableDiffusionApi:
         "track_id": None
         })
 
-        response = requests.request("POST", RequestConstants.url, headers = RequestConstants.headers, data = payload)
+        response = requests.request("POST", StableDiffusionApi.url, headers = StableDiffusionApi.headers, data = payload)
         
         if response.status_code == 200:
             return response.json()["url"]
@@ -55,7 +62,7 @@ class StableDiffusionApi:
         webHook (str): An optional webhook for notifications.
         """
         payload = json.dumps({
-            "key": "",
+            "key": StableDiffusionApi.key,
             "prompt": prompt,
             "negative_prompt": negativePrompt,
             "init_image": imageUrl,
@@ -72,7 +79,7 @@ class StableDiffusionApi:
             "track_id": None
             })
 
-        response = requests.request("POST", RequestConstants.url, headers = RequestConstants.headers, data = payload)
+        response = requests.request("POST", StableDiffusionApi.url, headers = StableDiffusionApi.headers, data = payload)
         
         if response.status_code == 200:
             return response.json()["url"]

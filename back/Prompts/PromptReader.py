@@ -1,19 +1,25 @@
 import json
+import os
 
 class PromptReader:
     
-    locationFilePath = "LocationPrompts.json"
-    characterFilePath = "CharacterPrompts.json"
+    locationFilePath = "back/Prompts/LocationPrompts.json"
+    characterFilePath = "back/Prompts/CharacterPrompts.json"
 
-    def GetLocationPrompt(id):
-        PromptReader.__GetPrompt__(id, PromptReader.locationFilePath)
+    @staticmethod
+    def GetScenarioPrompt(id):
+        return PromptReader.__GetPrompt__(id, PromptReader.locationFilePath)
 
+    @staticmethod
     def GetCharacterPrompt(id):
-        PromptReader.__GetPrompt__(id, PromptReader.characterFilePath)
-        
+        return PromptReader.__GetPrompt__(id, PromptReader.characterFilePath)
+
+    @staticmethod
     def __GetPrompt__(id, path):
         try:
-            with open(path, 'r') as file:
+            print(os.path.join(os.getcwd(), path))
+            with open(os.path.join(os.getcwd(), path), 'r') as file:
+                print(file)
                 data = json.load(file)
                 if id in data:
                     info = data[id]

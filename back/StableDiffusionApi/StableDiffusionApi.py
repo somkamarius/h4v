@@ -11,7 +11,7 @@ class StableDiffusionApi:
     'Content-Type': 'application/json'
     }
 
-    def GetGeneratedImageFromText(prompt, negativePrompt, upScale, highRes, panorama, webHook):
+    def GetGeneratedImageFromText(prompt, negativePrompt, upScale, height, width, highRes, panorama, webHook):
         """
         prompt (str): The text prompt to generate the image from.
         negativePrompt (str): An optional negative text prompt for contrast.
@@ -27,13 +27,13 @@ class StableDiffusionApi:
         "key": StableDiffusionApi.key,
         "prompt": prompt,
         "negative_prompt": negativePrompt,
-        "width": 512,
-        "height": 1024,
+        "width": width,
+        "height": height,
         "samples": "1",
         "num_inference_steps": "20",
         "seed": None,
         "guidance_scale": 7.5,
-        "safety_checker": "no",
+        "safety_checker": "yes",
         "multi_lingual": "no",
         "panorama": panorama,
         "self_attention": highRes,
@@ -51,7 +51,7 @@ class StableDiffusionApi:
             return None
 
     
-    def GetGeneratedImageFromImage(prompt, negativePrompt, imageUrl, destructionAmount, webHook):
+    def GetGeneratedImageFromImage(prompt, negativePrompt, height, width, imageUrl, destructionAmount, webHook):
         """
         prompt (str): The text prompt to generate the image from.
         negativePrompt (str): An optional negative text prompt for contrast.
@@ -66,11 +66,11 @@ class StableDiffusionApi:
             "prompt": prompt,
             "negative_prompt": negativePrompt,
             "init_image": imageUrl,
-            "width": 512,
-            "height": 1024,
+            "width": width,
+            "height": height,
             "samples": "1",
             "num_inference_steps": "30",
-            "safety_checker": "no",
+            "safety_checker": "yes",
             "enhance_prompt": "yes",
             "guidance_scale": 7.5,
             "strength": destructionAmount,

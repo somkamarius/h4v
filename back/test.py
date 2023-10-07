@@ -1,6 +1,6 @@
 from Prompts.PromptReader import PromptReader
 from StableDiffusionApi.StableDiffusionApi import StableDiffusionApi
-from dotenv import load_dotenv
 import os
 
-print(StableDiffusionApi.GetGeneratedImageFromText("Honda accord", '', 550, 550, 1, 'no', 'no', None))
+url = StableDiffusionApi.GetGeneratedImageFromText("Great dutchy of Lithuania villager, painting, portrait, black and white, no colors", '', 812, 512, 0, 'no', 'no', None)
+print(url)

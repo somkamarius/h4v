@@ -31,7 +31,6 @@ def request_conversation():
     apiKey = os.environ["api_key"]
 
     scenario = request.json['scenario']
-    conversation = request.json['conversation']
 
     prompt = PromptReader.GetScenarioPrompt(scenario)
 
@@ -43,14 +42,20 @@ def request_conversation():
             message='Prompt not found'
         )
 
-    if len(conversation) == 0:
-        conversation.append({"role": "system", "content": prompt.get('prompt')})
-        conversation.append({"role": "user", "content": prompt.get('first_message')})
+    conversation = request.json['conversation']
 
-    lastContent = conversation[-1]["content"]
-    if len(conversation) == 7:
+    lastContent = ""
+    if len(conversation) == 2:
+        lastContent = conversation[-1]["content"]
+        conversation[-1]["content"] = conversation[-1]["content"] + " Please dont end the story and give new options"
+        conversation[-1]["content"] = lastContent
+
+    if len(conversation) == 8:
+        lastContent = conversation[-1]["content"]
         conversation[-1]["content"] = conversation[-1]["content"] + " Finish this story and not give any options or choices"
 
+    conversation.insert(0, {"role": "system", "content": prompt.get('prompt')})
+    conversation.insert(1, {"role": "user", "content": prompt.get('first_message')})
 
     openai.api_key = apiKey
 
@@ -63,9 +68,13 @@ def request_conversation():
             conversation=conversation,
             message=str(exception)
         )
-     
-    conversation[-1]["content"] = lastContent
+    
+    if len(conversation) == 10 or len(conversation) == 4:
+        conversation[-1]["content"] = lastContent
+    
     conversation.append({"role": "assistant", "content": completion.choices[0].message.content})
+    conversation.pop(0)
+    conversation.pop(0)
 
     return jsonify(
         status='success',

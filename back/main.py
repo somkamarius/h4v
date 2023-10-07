@@ -35,6 +35,11 @@ def request_conversation():
         conversation.append({"role": "system", "content": prompt.get('prompt')})
         conversation.append({"role": "user", "content": prompt.get('first_message')})
 
+    lastContent = conversation[-1]["content"]
+    if len(conversation) == 7:
+        conversation[-1]["content"] = conversation[-1]["content"] + " Finish this story and not give any options or choices"
+
+
     openai.api_key = apiKey
 
     try:
@@ -46,7 +51,8 @@ def request_conversation():
             conversation=conversation,
             message=str(exception)
         )
-
+     
+    conversation[-1]["content"] = lastContent
     conversation.append({"role": "assistant", "content": completion.choices[0].message.content})
 
     return jsonify(

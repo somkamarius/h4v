@@ -6,11 +6,12 @@ from dotenv import load_dotenv
 import os
 import openai
 from Prompts.PromptReader import PromptReader
+from StableDiffusionApi.StableDiffusionApi import StableDiffusionApi
 
 app = Flask(__name__)
 
 @app.route("/request", methods=['POST'])
-def main():
+def request_conversation():
     load_dotenv()
 
     apiKey = os.environ["api_key"]
@@ -45,4 +46,16 @@ def main():
         status='success',
         scenario=scenario,
         conversation=conversation
+    )
+
+@app.route("/request-image", methods=['POST'])
+def request_image():
+    scenario = request.json['scenario']
+    
+    prompt = PromptReader.GetCharacterPrompt(scenario)
+
+    imgUrl = StableDiffusionApi.GetGeneratedImageFromText(prompt.get('prompt'), '', 1, 'no', 'no', None)
+
+    return jsonify(
+        url=imgUrl
     )

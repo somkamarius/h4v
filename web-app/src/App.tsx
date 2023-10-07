@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import './App.css'
 import { GameScreen, IntroPage } from './components'
-import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { Header } from './components/Header';
 
 function App() {
     const [displayGame, setDisplayGame] = useState(false)
@@ -27,16 +28,9 @@ function App() {
                 draggable
                 pauseOnHover
             />
-            <div className="min-h-screen bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-indigo-200 via-red-200 to-yellow-100">
-                {displayGame ? (
-                    <GameScreen initialMessage={initialMessage} code={code} />
-                ) : (
-                    <IntroPage
-                        setDisplayGame={setDisplayGame}
-                        setInitialMessage={setInitialMessage}
-                        setCode={setCode}
-                    />
-                )}
+            <Header />
+            <div className="min-h-screen bg-gradient-to-b from-gray-800 via-purple-800 to-violet-600">
+                {displayGame ? <GameScreen initialMessage={initialMessage} code={code} /> : <IntroPage setDisplayGame={setDisplayGame} setInitialMessage={setInitialMessage} setUpperCode={setCode} />}
             </div>
         </>
     )

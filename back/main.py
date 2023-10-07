@@ -11,6 +11,18 @@ app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
+@app.route('/initial/<string:id>') 
+@cross_origin()
+def initial_message(id):
+    prompt = PromptReader.GetScenarioPrompt(id)
+    return prompt.get('initial_message')
+
+@app.route('/facts/<string:id>') 
+@cross_origin()
+def facts(id):
+    prompt = PromptReader.GetScenarioPrompt(id)
+    return prompt.get('facts_about')
+
 @app.route("/request", methods=['POST'])
 @cross_origin()
 def request_conversation():

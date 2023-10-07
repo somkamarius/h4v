@@ -90,7 +90,6 @@ def request_conversation():
 @cross_origin()
 def request_streaming():
     scenario = request.json['scenario']
-    conversation = request.json['conversation']
 
     prompt = PromptReader.GetScenarioPrompt(scenario)
 
@@ -102,18 +101,36 @@ def request_streaming():
             message='Prompt not found'
         )
 
-    if len(conversation) == 0:
-        conversation.append({"role": "system", "content": prompt.get('prompt')})
-        conversation.append({"role": "user", "content": prompt.get('first_message')})
+    conversation = request.json['conversation']
+
+    lastContent = ""
+    if len(conversation) == 2:
+        lastContent = conversation[-1]["content"]
+        conversation[-1]["content"] = conversation[-1]["content"] + " Please dont end the story and give new options"
+
+    if len(conversation) == 8:
+        lastContent = conversation[-1]["content"]
+        conversation[-1]["content"] = conversation[-1]["content"] + " Finish this story and not give any options or choices"
+
+    conversation.insert(0, {"role": "system", "content": prompt.get('prompt')})
+    conversation.insert(1, {"role": "user", "content": prompt.get('first_message')})
 
     id = str(uuid.uuid4())
 
     Thread(target = streaming_task, args=(conversation,id,)).start()
 
+    if len(conversation) == 10 or len(conversation) == 4:
+        conversation[-1]["content"] = lastContent
+
+    newConversation = conversation.copy()
+
+    newConversation.pop(0)
+    newConversation.pop(0)
+
     return jsonify(
         status='success',
         scenario=scenario,
-        conversation=conversation,
+        conversation=newConversation,
         id = id
     )
 

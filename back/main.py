@@ -23,16 +23,26 @@ def main():
     prompt = PromptReader.GetScenarioPrompt(scenario)
 
     if len(conversation) == 0:
-        message = {"role": "system", "content": prompt}
-        conversation.append(message)
+        conversation.append({"role": "system", "content": prompt.get('prompt')})
+        conversation.append({"role": "user", "content": prompt.get('first_message')})
 
 
     openai.api_key = apiKey
-    completion = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=conversation)
+
+    try:
+        completion = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=conversation, temperature=0.7, max_tokens=1000)
+    except Exception as exception:
+        return jsonify(
+            status='failed',
+            scenario=scenario,
+            conversation=conversation,
+            message=str(exception)
+        )
 
     conversation.append({"role": "assistant", "content": completion.choices[0].message.content})
 
     return jsonify(
+        status='success',
         scenario=scenario,
         conversation=conversation
     )

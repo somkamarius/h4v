@@ -1,6 +1,7 @@
 {
     "1": {
         "name": "Vilnius Gediminas Castle tower",
-        "prompt": "You are a pirate"
+        "prompt": "You are a storyteller create a story as accurately as possible.",
+        "first_message": "Create a story about Lithuanian duke Gediminas and based on my decisions continue story and give more options? Generate story one part at a time. Max 4 times you need to choose."
     }
 }

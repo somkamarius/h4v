@@ -3,8 +3,8 @@ import os
 
 class PromptReader:
     
-    locationFilePath = "back/Prompts/LocationPrompts.json"
-    characterFilePath = "back/Prompts/CharacterPrompts.json"
+    locationFilePath = "Prompts/LocationPrompts.json"
+    characterFilePath = "Prompts/CharacterPrompts.json"
 
     @staticmethod
     def GetScenarioPrompt(id):
@@ -17,13 +17,11 @@ class PromptReader:
     @staticmethod
     def __GetPrompt__(id, path):
         try:
-            print(os.path.join(os.getcwd(), path))
             with open(os.path.join(os.getcwd(), path), 'r') as file:
-                print(file)
                 data = json.load(file)
                 if id in data:
                     info = data[id]
-                    return info.get('prompt', f"No string found for ID '{id}'")
+                    return info
                 else:
                     return f"ID '{id}' not found in JSON data."
         except FileNotFoundError:

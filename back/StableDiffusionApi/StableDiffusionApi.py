@@ -11,7 +11,7 @@ class StableDiffusionApi:
     'Content-Type': 'application/json'
     }
 
-    def GetGeneratedImageFromText(prompt, negativePrompt, height, width, upScale, highRes, panorama, webHook):
+    def GetGeneratedImageFromText(prompt, negativePrompt, upScale, highRes, panorama, webHook):
         """
         prompt (str): The text prompt to generate the image from.
         negativePrompt (str): An optional negative text prompt for contrast.
@@ -27,8 +27,8 @@ class StableDiffusionApi:
         "key": StableDiffusionApi.key,
         "prompt": prompt,
         "negative_prompt": negativePrompt,
-        "width": width,
-        "height": height,
+        "width": 1024,
+        "height": 1024,
         "samples": "1",
         "num_inference_steps": "20",
         "seed": None,
@@ -46,12 +46,12 @@ class StableDiffusionApi:
         response = requests.request("POST", StableDiffusionApi.url, headers = StableDiffusionApi.headers, data = payload)
         
         if response.status_code == 200:
-            return response.json()["url"]
+            return response.json()['output']
         else:
             return None
 
     
-    def GetGeneratedImageFromImage(prompt, negativePrompt, imageUrl, destructionAmount, height, width, webHook):
+    def GetGeneratedImageFromImage(prompt, negativePrompt, imageUrl, destructionAmount, webHook):
         """
         prompt (str): The text prompt to generate the image from.
         negativePrompt (str): An optional negative text prompt for contrast.
@@ -66,8 +66,8 @@ class StableDiffusionApi:
             "prompt": prompt,
             "negative_prompt": negativePrompt,
             "init_image": imageUrl,
-            "width": width,
-            "height": height,
+            "width": 1024,
+            "height": 1024,
             "samples": "1",
             "num_inference_steps": "30",
             "safety_checker": "no",
@@ -82,6 +82,6 @@ class StableDiffusionApi:
         response = requests.request("POST", StableDiffusionApi.url, headers = StableDiffusionApi.headers, data = payload)
         
         if response.status_code == 200:
-            return response.json()["url"]
+            return response.json()['output']
         else:
             return None

@@ -23,10 +23,17 @@ def request_conversation():
 
     prompt = PromptReader.GetScenarioPrompt(scenario)
 
+    if prompt is None:
+        return jsonify(
+            status='failed',
+            scenario=scenario,
+            conversation=conversation,
+            message='Prompt not found'
+        )
+
     if len(conversation) == 0:
         conversation.append({"role": "system", "content": prompt.get('prompt')})
         conversation.append({"role": "user", "content": prompt.get('first_message')})
-
 
     openai.api_key = apiKey
 

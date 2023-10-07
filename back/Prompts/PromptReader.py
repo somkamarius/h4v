@@ -23,6 +23,6 @@ class PromptReader:
                     info = data[id]
                     return info
                 else:
-                    return f"ID '{id}' not found in JSON data."
+                    return None
         except FileNotFoundError:
             return "JSON file not found."

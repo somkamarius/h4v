@@ -7,6 +7,10 @@ import openai
 from Prompts.PromptReader import PromptReader
 from StableDiffusionApi.StableDiffusionApi import StableDiffusionApi
 
+from threading import Thread
+import uuid
+import json
+
 app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
@@ -82,6 +86,37 @@ def request_conversation():
         conversation=conversation
     )
 
+@app.route("/request-streaming", methods=['POST'])
+@cross_origin()
+def request_streaming():
+    scenario = request.json['scenario']
+    conversation = request.json['conversation']
+
+    prompt = PromptReader.GetScenarioPrompt(scenario)
+
+    if prompt is None:
+        return jsonify(
+            status='failed',
+            scenario=scenario,
+            conversation=conversation,
+            message='Prompt not found'
+        )
+
+    if len(conversation) == 0:
+        conversation.append({"role": "system", "content": prompt.get('prompt')})
+        conversation.append({"role": "user", "content": prompt.get('first_message')})
+
+    id = str(uuid.uuid4())
+
+    Thread(target = streaming_task, args=(conversation,id,)).start()
+
+    return jsonify(
+        status='success',
+        scenario=scenario,
+        conversation=conversation,
+        id = id
+    )
+
 @app.route("/request-image", methods=['POST'])
 @cross_origin()
 def request_image():
@@ -94,3 +129,42 @@ def request_image():
     return jsonify(
         url=imgUrl[0]
     )
+
+@app.route("/request-streaming/<id>")
+def request_streaming_get(id):
+
+    path = os.getcwd()+"/Cache/"+id+".json"
+
+    if os.path.isfile(path):
+        file = open(path, 'r')
+        return json.load(file)
+    else :
+        return jsonify({"message": "", "status": "failed"})
+
+def streaming_task(conversation,id):
+
+    file = open(os.getcwd()+"/Cache/"+id+".json", "w")
+    data = {"message": "", "status": "running"}
+    json.dump(data, file)
+    file.close()
+
+    apiKey = os.environ["api_key"]
+    openai.api_key = apiKey
+
+    response = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=conversation, temperature=0.7, max_tokens=1000, stream=True)
+
+    message = ""
+
+    for chunk in response:
+        if chunk['choices'][0]['delta']:
+            chunk_message = chunk['choices'][0]['delta']['content']
+            message += str(chunk_message)
+            data['message'] = message
+            file = open(os.getcwd()+"/Cache/"+id+".json", "w")
+            json.dump(data, file)
+            file.close()
+
+    file = open(os.getcwd()+"/Cache/"+id+".json", "w")
+    data['status'] = 'done'
+    json.dump(data, file)
+    file.close()

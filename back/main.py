@@ -21,7 +21,7 @@ def initial_message(id):
     prompt = PromptReader.GetScenarioPrompt(id)
     return prompt.get('initial_message')
 
-@app.route('/facts/<string:id>') 
+@app.route('/facts/<string:id>', methods=['GET']) 
 @cross_origin()
 def facts(id):
     prompt = PromptReader.GetScenarioPrompt(id)
@@ -147,9 +147,9 @@ def request_image():
         url=imgUrl[0]
     )
 
-@app.route("/request-streaming/<id>")
+@app.route("/request-streaming/<id>", methods=['GET'])
+@cross_origin()
 def request_streaming_get(id):
-
     path = os.getcwd()+"/Cache/"+id+".json"
 
     if os.path.isfile(path):

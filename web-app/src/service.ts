@@ -2,7 +2,7 @@
 import { toast } from 'react-toastify'
 import { SERVER_URL } from './common/constants'
 import http from './common/http-common'
-import { Conversation, Journey } from './common/types'
+import { Journey, MessageResponse, StreamingResponse } from './common/types'
 
 const BASE_URL = SERVER_URL
 
@@ -18,7 +18,7 @@ class JourneyService {
         })
     }
 
-    async sendCode(code: string) {
+    async getConversationId(code: string): Promise<StreamingResponse> {
         const existingJourneyData: Journey = JSON.parse(
             localStorage.getItem('journey') ?? ''
         )
@@ -29,36 +29,21 @@ class JourneyService {
         localStorage.setItem('journey', JSON.stringify(updatedJourneyData))
 
         return http
-            .post<unknown>(
-                `${BASE_URL}/request`,
+            .post<StreamingResponse>(
+                `${BASE_URL}/request-streaming`,
                 JSON.stringify(updatedJourneyData)
             )
-            .then((res) =>
-                res.status === 200 || res.status === 201
-                    ? res.data
-                    : toast('Call to server failed', { type: 'error' })
-            )
+            .then((res) => {
+                return res.data
+            })
     }
 
-    async sendMessage(message: Conversation) {
-        const existingJourneyData: Journey = JSON.parse(
-            localStorage.getItem('journey') ?? ''
-        )
-        const updatedJourneyData: Journey = {
-            scenario: existingJourneyData.scenario,
-            conversation: [...existingJourneyData.conversation, message],
-        }
-
+    async getMessageStream(id: string): Promise<MessageResponse> {
         return http
-            .post<unknown>(
-                `${BASE_URL}/request`,
-                JSON.stringify(updatedJourneyData)
-            )
-            .then((res) =>
-                res.status === 200 || res.status === 201
-                    ? res.data
-                    : toast('Call to server failed', { type: 'error' })
-            )
+            .get<MessageResponse>(`${BASE_URL}/request-streaming/` + id)
+            .then((res) => {
+                return res.data
+            })
     }
 }
 

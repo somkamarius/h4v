@@ -1,6 +1,5 @@
-from flask import Flask
-from flask import request
-from flask import jsonify
+from flask import Flask, request, jsonify
+from flask_cors import CORS, cross_origin
 from dotenv import load_dotenv
 
 import os
@@ -9,8 +8,11 @@ from Prompts.PromptReader import PromptReader
 from StableDiffusionApi.StableDiffusionApi import StableDiffusionApi
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 @app.route("/request", methods=['POST'])
+@cross_origin()
 def request_conversation():
     load_dotenv()
 
@@ -18,8 +20,6 @@ def request_conversation():
 
     scenario = request.json['scenario']
     conversation = request.json['conversation']
-
-    result = []
 
     prompt = PromptReader.GetScenarioPrompt(scenario)
 
@@ -49,6 +49,7 @@ def request_conversation():
     )
 
 @app.route("/request-image", methods=['POST'])
+@cross_origin()
 def request_image():
     scenario = request.json['scenario']
     
@@ -57,5 +58,5 @@ def request_image():
     imgUrl = StableDiffusionApi.GetGeneratedImageFromText(prompt.get('prompt'), '', 1, 'no', 'no', None)
 
     return jsonify(
-        url=imgUrl
+        url=imgUrl[0]
     )

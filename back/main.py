@@ -154,7 +154,11 @@ def request_streaming_get(id):
 
     if os.path.isfile(path):
         file = open(path, 'r')
-        return json.load(file)
+        try:
+            json_result = json.load(file)
+        except Exception as exception:
+            return jsonify({"message": "", "status": "reading_error"})
+        return json_result
     else :
         return jsonify({"message": "", "status": "failed"})
 

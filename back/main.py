@@ -157,7 +157,7 @@ def request_streaming_get(id):
         try:
             json_result = json.load(file)
         except Exception as exception:
-            return jsonify({"message": "", "status": "reading_error"})
+            return jsonify({"message": "", "status": "running"})
         return json_result
     else :
         return jsonify({"message": "", "status": "failed"})

@@ -21,6 +21,12 @@ def initial_message(id):
     prompt = PromptReader.GetScenarioPrompt(id)
     return prompt.get('initial_message')
 
+@app.route('/end-message/<string:id>') 
+@cross_origin()
+def end_message(id):
+    prompt = PromptReader.GetScenarioPrompt(id)
+    return prompt.get('end_message')
+
 @app.route('/facts/<string:id>', methods=['GET']) 
 @cross_origin()
 def facts(id):

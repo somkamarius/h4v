@@ -7,6 +7,30 @@ import { Journey, MessageResponse, StreamingResponse } from './common/types'
 const BASE_URL = SERVER_URL
 
 class JourneyService {
+    async getFacts(code: string): Promise<string> {
+        return http.get<string>(`${BASE_URL}/facts/${code}`).then((res) => {
+            if (res.status === 200) {
+                return res.data
+            }
+
+            toast('Failed to initialize connection')
+            return ''
+        })
+    }
+
+    async getEndMessage(code: string): Promise<string> {
+        return http
+            .get<string>(`${BASE_URL}/end-message/${code}`)
+            .then((res) => {
+                if (res.status === 200) {
+                    return res.data
+                }
+
+                toast('Failed to initialize connection')
+                return ''
+            })
+    }
+
     async getMessage(code: string): Promise<string> {
         return http.get<string>(`${BASE_URL}/initial/${code}`).then((res) => {
             if (res.status === 200) {

@@ -100,9 +100,8 @@ export function GameScreen({ initialMessage, code }: Props) {
                 <div className="flex w-full max-h-[600px] min-h-[600px] overflow-y-auto ">
                     <div className="mx-auto flex flex-col text-sm max-w-xs justify-items-stretch w-full">
                         <div
-                            className={`w-full px-4 italic py-2 rounded-lg inline-block text-white transition-all duration-[3000ms] h-fit    ${
-                                fade ? 'opacity-100' : 'opacity-0'
-                            }`}
+                            className={`w-full px-4 italic py-2 rounded-lg inline-block text-white transition-all duration-[3000ms] h-fit    ${fade ? 'opacity-100' : 'opacity-0'
+                                }`}
                         >
                             {initialMessage}
                         </div>
@@ -111,11 +110,10 @@ export function GameScreen({ initialMessage, code }: Props) {
                                 return (
                                     <div
                                         key={convo.content + idx}
-                                        className={`${
-                                            convo.role === 'assistant'
+                                        className={`${convo.role === 'assistant'
                                                 ? 'justify-self-start bg-white text-left'
                                                 : ' justify-self-end bg-indigo-200 text-right'
-                                        } px-4 py-2 rounded-lg inline-block text-gray-600 h-fit `}
+                                            } px-4 py-2 rounded-lg inline-block text-gray-600 h-fit `}
                                     >
                                         {convo.content}
                                     </div>
@@ -127,9 +125,8 @@ export function GameScreen({ initialMessage, code }: Props) {
             </div>
 
             <div
-                className={`transition-all duration-[3000ms] ${
-                    fade ? 'opacity-100' : 'opacity-0'
-                }`}
+                className={`transition-all duration-[3000ms] ${fade ? 'opacity-100' : 'opacity-0'
+                    }`}
             >
                 <div className="mx-20 relative mt-12 rounded-md shadow-sm">
                     <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3" />

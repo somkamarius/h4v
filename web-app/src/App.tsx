@@ -29,9 +29,10 @@ function App() {
                 pauseOnHover
             />
             <Header />
-            <div className="min-h-screen bg-gradient-to-b from-gray-800 via-purple-800 to-violet-600">
+            <div className="z-0 min-h-screen bg-gradient-to-b from-gray-800 via-purple-800 to-violet-600">
                 {displayGame ? <GameScreen initialMessage={initialMessage} code={code} /> : <IntroPage setDisplayGame={setDisplayGame} setInitialMessage={setInitialMessage} setUpperCode={setCode} />}
             </div>
+            {/* </div> */}
         </>
     )
 }
